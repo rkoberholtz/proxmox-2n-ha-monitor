@@ -1,0 +1,12 @@
+[Unit]
+Description=Monitor Cluster Service
+After=multi-user.target
+Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /root/monitor_cluster.py
+StandardInput=tty-force
+
+[Install]
+WantedBy=multi-user.target
