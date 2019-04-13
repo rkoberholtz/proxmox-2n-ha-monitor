@@ -5,7 +5,7 @@ Conflicts=getty@tty1.service
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /root/monitor_cluster.py
+ExecStart=/usr/bin/python3 /root/proxmox-2n-ha-monitor/monitor_cluster.py --down_threshold=3
 StandardInput=tty-force
 
 [Install]
