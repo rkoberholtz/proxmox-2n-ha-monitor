@@ -24,14 +24,12 @@ def main(argv):
         elif opt in ("-l", "--logfile"):
             logfile = arg
 
+    checkLogfile()
+    
     logging.basicConfig(filename=logfile,level=logging.DEBUG)
 
     logging.debug("Process Started...logfile: %s]" % logfile)
     
-    log_exists = os.path.exists(logfile)
-
-    if not log_exists:
-        os.mknod(logfile)
 
     while True:
         
@@ -41,6 +39,7 @@ def main(argv):
         down_threshold = int(down_threshold)
         for i in range(down_threshold):
         
+            checkLogfile()
             time.sleep(60)
             
             j = i + 1
@@ -89,6 +88,14 @@ def setExpected():
     process = subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
     out, err = process.communicate()
     logging.debug("result of '%s': %s | %s" % (cmd, out, err))
+    return 0
+
+def checkLogfile():
+    
+    log_exists = os.path.exists(logfile)
+
+    if not log_exists:
+        os.mknod(logfile)
     return 0
 
 def optUsage():
