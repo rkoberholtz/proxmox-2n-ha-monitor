@@ -72,10 +72,12 @@ def main(argv):
                 logging.debug("An Unknown Check Result has been recievedi: %s" % status)
             
         
-        if conn_failures < down_threshold:
-            logging.debug("Cluster OK")
+        if conn_failures == 0:
+            logging.debug("Cluster is OK")
+        elif conn_failures > 0 and conn_failures < down_threshold:
+            logging.debug("No Quorum, but threshold not met")
         elif conn_failures >= down_threshold: 
-            logging.debug("No Quorum for %s!  Starting VMs on this NODE!" % down_threshold)
+            logging.debug("No Quorum on %s checks!  Starting VMs on this NODE!" % down_threshold)
             setExpected()
                   
         logging.debug("Number of connection failures: %s - Sleeping for 15 seconds" % conn_failures)
