@@ -6,7 +6,7 @@ import logging
 
 def main(argv):
 
-    logfile = "/var/log/monitored_node.log"
+    logfile = "/var/log/monitor_2n_cluster.log"
     down_threshold = 5
 
     try:
@@ -46,7 +46,7 @@ def main(argv):
             #print(status)
 
             if "dead?" in str(status):
-                cmd = "pvecm status | grep 'Expected votes'
+                cmd = "pvecm status | grep 'Expected votes'"
                 process - subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
                 vote_status, vote_err = process.communicate()
                 if "Expected votes:   2" in str(vote_status):
