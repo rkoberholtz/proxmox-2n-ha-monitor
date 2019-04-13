@@ -59,6 +59,7 @@ def main(argv):
                     setExpected()
                     logging.debug("Check %s of %s: Quorum NOT OK, 1 node offline - expected quorum has been set to 1" % (j, down_threshold))
                 elif "Expected votes:   2" in str(vote_status) and conn_failures < down_threshold:
+                    conn_failures += 1
                     logging.debug("Check %s of %s: Quorum NOT OK, 1 node offline - waiting for threshold to be met before acting" % (j, down_threshold))
                 elif "Expected votes:   1" in str(vote_status):
                     logging.debug("Check %s of %s: Quorum NOT OK, 1 node offline - expected quorim has been set to 1" % (j, down_threshold))
