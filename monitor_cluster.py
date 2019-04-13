@@ -24,7 +24,7 @@ def main(argv):
         elif opt in ("-l", "--logfile"):
             logfile = arg
 
-    checkLogfile()
+    checkLogfile(logfile)
     
     logging.basicConfig(filename=logfile,level=logging.DEBUG)
 
@@ -90,7 +90,7 @@ def setExpected():
     logging.debug("result of '%s': %s | %s" % (cmd, out, err))
     return 0
 
-def checkLogfile():
+def checkLogfile(logfile):
     
     log_exists = os.path.exists(logfile)
 
