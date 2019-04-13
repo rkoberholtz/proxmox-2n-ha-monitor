@@ -37,6 +37,7 @@ def main(argv):
         
             time.sleep(60)
             
+            j = i + 1
             cmd = "ha-manager status"
             #cmd = "ssh -q -o BatchMode=yes -o ConnectTimeout=10 %s echo 2>&1 && echo $host SSH_OK || echo $host SSH_NOK" % monitored_node_ip
             process = subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
@@ -44,10 +45,12 @@ def main(argv):
        
             #print(status)
 
-            if "quorum OK" in str(status):
-                logging.debug("Check %s of %s: Quorum OK" % (i, down_threshold))
+            if "dead?" in str(status):
+                logging.debug("Check %s of %s: Quorum NOT OK, 1 node offline - expected quorum has been set to 1" % (j, down_threshold))
+            elif "quorum OK" in str(status):
+                logging.debug("Check %s of %s: Quorum OK" % (j, down_threshold))
             elif "No quorum on node" in str(status):
-                logging.debug("Check %s of %s: Quorum NOT OK" % (i, down_threshold))
+                logging.debug("Check %s of %s: Quorum NOT OK" % (j, down_threshold))
                 conn_failures += 1
             else:
                 logging.debug("An Unknown Check Result has been recievedi: %s" % status)
