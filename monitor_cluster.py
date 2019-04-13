@@ -35,6 +35,8 @@ def main(argv):
         down_threshold = int(down_threshold)
         for i in range(down_threshold):
         
+            time.sleep(60)
+            
             cmd = "ha-manager status"
             #cmd = "ssh -q -o BatchMode=yes -o ConnectTimeout=10 %s echo 2>&1 && echo $host SSH_OK || echo $host SSH_NOK" % monitored_node_ip
             process = subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
@@ -50,7 +52,6 @@ def main(argv):
             else:
                 logging.debug("An Unknown Check Result has been recievedi: %s" % status)
             
-            time.sleep(60)
         
         if conn_failures < down_threshold:
             logging.debug("Cluster OK")
@@ -59,11 +60,10 @@ def main(argv):
             startVMs()
                   
         logging.debug("Number of connection failures: %s - Sleeping for 15 seconds" % conn_failures)
-        time.sleep(15)
 
 def startVMs():
 
-    logging.debug("Setting quorum 'expected' to 1")
+    logging.debug("Setting quorum expected nodes to 1")
     cmd = "pvecm expect 1"
     process = subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
     out, err = process.communicate()
