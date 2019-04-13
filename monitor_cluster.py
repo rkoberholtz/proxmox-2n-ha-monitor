@@ -46,6 +46,11 @@ def main(argv):
             #print(status)
 
             if "dead?" in str(status):
+                cmd = "pvecm status | grep 'Expected votes'
+                process - subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
+                vote_status, vote_err = process.communicate()
+                if "Expected votes:   2" in str(vote_status):
+                    setExpected()
                 logging.debug("Check %s of %s: Quorum NOT OK, 1 node offline - expected quorum has been set to 1" % (j, down_threshold))
             elif "quorum OK" in str(status):
                 logging.debug("Check %s of %s: Quorum OK" % (j, down_threshold))
@@ -60,11 +65,11 @@ def main(argv):
             logging.debug("Cluster OK")
         elif conn_failures >= down_threshold: 
             logging.debug("No Quorum for %s!  Starting VMs on this NODE!" % down_threshold)
-            startVMs()
+            setExpected()
                   
         logging.debug("Number of connection failures: %s - Sleeping for 15 seconds" % conn_failures)
 
-def startVMs():
+def setExpected():
 
     logging.debug("Setting quorum expected nodes to 1")
     cmd = "pvecm expect 1"
