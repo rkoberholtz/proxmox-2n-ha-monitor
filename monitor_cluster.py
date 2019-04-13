@@ -53,7 +53,7 @@ def main(argv):
 
             if "dead?" in str(status):
                 cmd = "pvecm status | grep 'Expected votes'"
-                process - subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
+                process = subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
                 vote_status, vote_err = process.communicate()
                 if "Expected votes:   2" in str(vote_status):
                     setExpected()
