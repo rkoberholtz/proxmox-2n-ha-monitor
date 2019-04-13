@@ -6,13 +6,11 @@ import logging
 
 def main(argv):
 
-    monitored_node_ip = ''
     logfile = "/var/log/monitored_node.log"
     down_threshold = 5
-    status = ''
 
     try:
-        opts, args = getopt.getopt(argv,"hn:tl",["node_ip="])
+        opts, args = getopt.getopt(argv,"htl",["down_threshold"])
     except:
         optUsage()
         sys.exit(2)
@@ -20,8 +18,6 @@ def main(argv):
         if opt == '-h':
             optUsage()
             sys.exit()
-        elif opt in ("-n", "--node_ip"):
-            monitored_node_ip = arg
         elif opt in ("-t", "--down_threshold"):
             down_threshold = arg
         elif opt in ("-l", "--logfile"):
@@ -29,31 +25,36 @@ def main(argv):
 
     logging.basicConfig(filename=logfile,level=logging.DEBUG)
 
-    logging.debug("Process Started...[monitored_node: %s | logfile: %s]" % (monitored_node_ip, logfile))
+    logging.debug("Process Started...logfile: %s]" % logfile)
 
     while True:
         
-        logging.debug("--%s-- Starting Check Process for %s" % (time.strftime("%Y%m%d-%H%M%S"), monitored_node_ip))
+        logging.debug("--%s-- Starting Check Process" % time.strftime("%Y%m%d-%H%M%S"))
 
         conn_failures = 0
         for i in range(down_threshold):
         
-            cmd = "ssh -q -o BatchMode=yes -o ConnectTimeout=10 %s echo 2>&1 && echo $host SSH_OK || echo $host SSH_NOK" % monitored_node_ip
+            cmd = "ha-manager status"
+            #cmd = "ssh -q -o BatchMode=yes -o ConnectTimeout=10 %s echo 2>&1 && echo $host SSH_OK || echo $host SSH_NOK" % monitored_node_ip
             process = subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
             status, err = process.communicate()
-        
-            if "SSH_OK" in str(status):
-                logging.debug("Check %s of %s: OK" % (i, down_threshold))
-            elif "SSH_NOK" in str(status):
-                logging.debug("Check %s of %s: NOT OK" % (i, down_threshold))
+       
+            #print(status)
+
+            if "quorum OK" in str(status):
+                logging.debug("Check %s of %s: Quorum OK" % (i, down_threshold))
+            elif "No quorum on node" in str(status):
+                logging.debug("Check %s of %s: Quorum NOT OK" % (i, down_threshold))
                 conn_failures += 1
             else:
                 logging.debug("An Unknown Check Result has been recievedi: %s" % status)
-
-        if conn_failures <= down_threshold:
-            logging.debug("Node %s OK" % monitored_node_ip)
-        elif conn_failures > down_threshold: 
-            logging.debug("Node $s is UNAVAILABLE!  Starting VMs on this NODE!" % monitored_node_ip)
+            
+            time.sleep(60)
+        
+        if conn_failures < down_threshold:
+            logging.debug("Cluster OK")
+        elif conn_failures >= down_threshold: 
+            logging.debug("No Quorum for %s!  Starting VMs on this NODE!" % down_threshold)
             startVMs()
                   
         logging.debug("Number of connection failures: %s - Sleeping for 15 seconds" % conn_failures)
