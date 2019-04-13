@@ -3,6 +3,7 @@ import sys
 import getopt
 import time
 import logging
+import os
 
 def main(argv):
 
@@ -26,6 +27,11 @@ def main(argv):
     logging.basicConfig(filename=logfile,level=logging.DEBUG)
 
     logging.debug("Process Started...logfile: %s]" % logfile)
+    
+    log_exists = os.path.exists(logfile)
+
+    if not log_exists:
+        os.mknod(logfile)
 
     while True:
         
