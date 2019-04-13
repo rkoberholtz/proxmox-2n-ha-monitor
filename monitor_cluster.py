@@ -55,9 +55,13 @@ def main(argv):
                 cmd = "pvecm status | grep 'Expected votes'"
                 process = subprocess.Popen(['bash', '-c', cmd], stdout=subprocess.PIPE)
                 vote_status, vote_err = process.communicate()
-                if "Expected votes:   2" in str(vote_status):
+                if "Expected votes:   2" in str(vote_status) and conn_failures >= down_threshold:
                     setExpected()
-                logging.debug("Check %s of %s: Quorum NOT OK, 1 node offline - expected quorum has been set to 1" % (j, down_threshold))
+                    logging.debug("Check %s of %s: Quorum NOT OK, 1 node offline - expected quorum has been set to 1" % (j, down_threshold))
+                elif "Expected votes:   2" in str(vote_status) and conn_failures < down_threshold:
+                    logging.debug("Check %s of %s: Quorum NOT OK, 1 node offline - waiting for threshold to be met before acting" % (j, down_threshold))
+                elif "Expected votes:   1" in str(vote_status):
+                    logging.debug("Check %s of %s: Quorum NOT OK, 1 node offline - expected quorim has been set to 1" % (j, down_threshold))
             elif "quorum OK" in str(status):
                 logging.debug("Check %s of %s: Quorum OK" % (j, down_threshold))
             elif "No quorum on node" in str(status):
