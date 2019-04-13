@@ -10,7 +10,7 @@ def main(argv):
     down_threshold = 5
 
     try:
-        opts, args = getopt.getopt(argv,"htl",["down_threshold"])
+        opts, args = getopt.getopt(argv,"htl",["down_threshold="])
     except:
         optUsage()
         sys.exit(2)
@@ -32,6 +32,7 @@ def main(argv):
         logging.debug("--%s-- Starting Check Process" % time.strftime("%Y%m%d-%H%M%S"))
 
         conn_failures = 0
+        down_threshold = int(down_threshold)
         for i in range(down_threshold):
         
             cmd = "ha-manager status"
@@ -74,8 +75,7 @@ def optUsage():
     print("General Help:")
     print("  This program monitors the availability of the specified ProxMox Node IP address.  If the node become unreachable it is assumed to be offline and runs the required commands to start the Virtual machines configured for HA on this node.")
     print("")
-    print("  -n, --node_ip | IP Address of the ProxMox Node to be monitored")
-    print("  -t, --node_up | Threshold (in minutes) that the node needs to be down before considered down. Default is 5 min")
+    print("  --down_threshold= | Threshold (in minutes) that the node needs to be down before considered down. Default is 5 min")
     return 0
 
 
