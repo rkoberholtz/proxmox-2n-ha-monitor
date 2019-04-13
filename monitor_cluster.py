@@ -39,7 +39,7 @@ def main(argv):
         down_threshold = int(down_threshold)
         for i in range(down_threshold):
         
-            checkLogfile()
+            checkLogfile(logfile)
             time.sleep(60)
             
             j = i + 1
