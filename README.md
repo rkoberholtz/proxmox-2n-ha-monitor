@@ -10,7 +10,7 @@ This script only checks the status of the cluster quorum from the node it is run
 
 ## Setup
 
- * Setup a 2 node Proxmox cluster (v5.4-3) w/ ZFS local storage.  (If shared storage is available, that would be preferrable)
+ * Setup a 2 node Proxmox cluster (v5.4-3 - 6.1-3) w/ ZFS local storage.  (If shared storage is available, that would be preferrable)
  * Enable Virtual Machine replication to the other node every 5 minutes or so (If using shared storage, replication is not needed)
  * Add the Virtual Machine as a High Availability resource in the cluster
  * Deploy the service file and enable for start on boot
