@@ -79,7 +79,7 @@ def main(argv):
             logging.debug("No Quorum on %s checks!  Starting VMs on this NODE!" % down_threshold)
             setExpected()
                   
-        logging.debug("Number of connection failures: %s - Sleeping for 15 seconds" % conn_failures)
+        logging.debug("Number of connection failures: %s - Sleeping for 60 seconds" % conn_failures)
 
 def setExpected():
 
